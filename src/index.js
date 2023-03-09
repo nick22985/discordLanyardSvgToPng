@@ -2,8 +2,8 @@ const axios = require('axios');
 const express = require('express');
 const { Readable } = require('stream');
 
+const bodyParser = require('body-parser');
 const puppeteer = require('puppeteer');
-
 require('dotenv').config();
 const debug = require('debug');
 debug.enable('*:error,*:warn,*:info,*:log' + (process.env.DEBUG ? ',' + process.env.DEBUG : ''));
@@ -16,6 +16,7 @@ const port = process.env.PORT || 3000;
 
 const http = require('http');
 const server = http.createServer(app);
+app.use(bodyParser.json());
 
 app.get('/discordProfile/:id', async (req, res) => {
 	try {
