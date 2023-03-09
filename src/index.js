@@ -1,6 +1,7 @@
 const axios = require('axios');
 const express = require('express');
 const { Readable } = require('stream');
+const nocache = require('nocache');
 
 const bodyParser = require('body-parser');
 const puppeteer = require('puppeteer');
@@ -16,6 +17,7 @@ const port = process.env.PORT || 9995;
 
 const http = require('http');
 const server = http.createServer(app);
+app.use(nocache());
 app.use(bodyParser.json());
 
 app.get('/discordProfile/:id', async (req, res) => {
@@ -53,14 +55,7 @@ app.get('/discordProfile/:id', async (req, res) => {
 		stream.push(screenshot);
 		stream.push(null);
 		// send back with express
-		res.set('Content-Type', 'image/png');
-		res.set('Cache-Control', 'no-store');
-		res.set('Pragma-directive: no-store');
-		res.set('Cache-directive: no-store');
-		res.set('Pragma: no-store');
-		res.set('Expires: 0');
-		res.set('');
-		// set headers
+
 		stream.pipe(res);
 	} catch (error) {
 		$debug.extend('error')(error);
