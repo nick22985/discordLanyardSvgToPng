@@ -54,12 +54,13 @@ app.get('/discordProfile/:id', async (req, res) => {
 		stream.push(null);
 		// send back with express
 		res.set('Content-Type', 'image/png');
-		res.set('Cache-Control', 'no-cache');
-		res.set('Pragma-directive: no-cache');
-		res.set('Cache-directive: no-cache');
-		res.set('Cache-control: no-cache');
-		res.set('Pragma: no-cache');
+		res.set('Cache-Control', 'no-store');
+		res.set('Pragma-directive: no-store');
+		res.set('Cache-directive: no-store');
+		res.set('Pragma: no-store');
 		res.set('Expires: 0');
+		res.set('');
+		// set headers
 		stream.pipe(res);
 	} catch (error) {
 		$debug.extend('error')(error);
