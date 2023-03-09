@@ -55,7 +55,7 @@ app.get('/discordProfile/:id', async (req, res) => {
 		stream.push(screenshot);
 		stream.push(null);
 		// send back with express
-
+		app.set('etag', false);
 		stream.pipe(res);
 	} catch (error) {
 		$debug.extend('error')(error);
