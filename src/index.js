@@ -2,6 +2,7 @@ const axios = require('axios');
 const express = require('express');
 const { Readable } = require('stream');
 const nocache = require('nocache');
+const sharp = require('sharp');
 
 const bodyParser = require('body-parser');
 const puppeteer = require('puppeteer');
@@ -24,9 +25,9 @@ app.get('/discordProfile/:id', async (req, res) => {
 	try {
 		$debug.extend('info')('Request received');
 		const id = req.params.id;
+		const size = req.query.size || 425;
 		const url = `https://lanyard-profile-readme.vercel.app/api/${id}?&animated=true&hideDiscrim=false`;
 		const response = await axios.get(url);
-
 		const svg = response.data;
 
 		// launch a headless instance of Chromium using puppeteer
@@ -46,13 +47,18 @@ app.get('/discordProfile/:id', async (req, res) => {
 		await page.setContent(svg, { waitUntil: 'networkidle0' });
 		// use page.screenshot() to capture a screenshot of the page, and save it as a PNG
 		const screenshot = await page.screenshot({ type: 'png', omitBackground: true });
+		console.log(Math.round(page.viewport().width / 2));
+		const resizedScreenshot = await sharp(screenshot)
+			.resize(425, 225)
+			.resize({ width: Math.round(size) })
+			.toBuffer();
 
 		// close the puppeteer browser
 		await browser.close();
 
 		// convert the Buffer object to a Readable stream
 		const stream = new Readable();
-		stream.push(screenshot);
+		stream.push(resizedScreenshot);
 		stream.push(null);
 		// send back with express
 		app.set('etag', false);
