@@ -12,7 +12,7 @@ const $debug = debug('svgToPng:server');
 
 //Express Server
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 9995;
 
 const http = require('http');
 const server = http.createServer(app);
